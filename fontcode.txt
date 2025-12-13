@@ -1,0 +1,12 @@
+Use this code for adding the font
+
+
+
+
+<head><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet">
+<style>body {
+  font-family: 'Comic Relief', sans-serif;
+}
+</style></head>
