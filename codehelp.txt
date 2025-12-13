@@ -3,7 +3,9 @@ Code Help!
 
 Use this code to center text:
 
-<center>textlelement</center>
+Add this code for centered text:
+
+<hd style="text-align: center;">text</hd>
 
 
 Use this code for adding the font:
@@ -29,10 +31,3 @@ style="font-size: num%;"
 Use this code for automatic dark mode:
 
 <meta name="color-scheme" content="light dark" />
-
-
-Add this code for centered text:
-
-thing to apply to, other thing, ex, hd {
-text-align: center;
-}
