@@ -5,13 +5,11 @@ Use this code to center text:
 
 Add this code for centered text:
 
-<hd style="text-align: center;">text</hd>
+<p style="text-align: center;">text</p>
 
 or this:
 
-h1, p, div {
-text-align: center;
-}
+<div style="text-align: center;"></div>
 
 
 Use this code for adding the font:
