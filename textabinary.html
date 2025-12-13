@@ -13,7 +13,7 @@
   <title>Text ↔ Binary Converter</title>
 
   <style>
-    * { box-sizing: border-box; } /* IMPORTANT: prevents textarea overflow */
+    * { box-sizing: border-box; }
 
     body {
       font-family: 'Comic Relief', sans-serif;
@@ -21,13 +21,12 @@
       line-height: 1.35;
     }
 
-    h1 { margin: 12px 0 16px; }
-
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
       margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 12px 0 16px;
     }
 
     .grid {
@@ -41,7 +40,7 @@
     }
 
     section {
-      min-width: 0;                 /* IMPORTANT: allows children to shrink in grid */
+      min-width: 0;
       padding: 14px;
       border-radius: 14px;
       border: 1px solid color-mix(in oklab, CanvasText 18%, Canvas 82%);
@@ -56,12 +55,13 @@
       margin-bottom: 6px;
     }
 
-    .muted { opacity: 0.7; font-size: 13px; }
+    .muted {
+      opacity: 0.7;
+      font-size: 13px;
+    }
 
     textarea {
-      display: block;
       width: 100%;
-      max-width: 100%;
       min-height: 220px;
       padding: 12px;
       font: 14px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
@@ -70,7 +70,6 @@
       background: Canvas;
       color: CanvasText;
       resize: vertical;
-      overflow-wrap: anywhere;
     }
 
     textarea:focus {
@@ -92,10 +91,6 @@
       background: color-mix(in oklab, CanvasText 12%, Canvas 88%);
     }
 
-    button:active {
-      background: color-mix(in oklab, CanvasText 16%, Canvas 84%);
-    }
-
     #status {
       font-size: 13px;
       opacity: 0.8;
@@ -107,41 +102,45 @@
 
 <body>
   <div class="topbar">
-    <a href="https://beatystupid.github.io" style="text-decoration:none; font-size: 175%;">Back</a>
+    <a href="https://beatystupid.github.io" style="text-decoration:none; font-size:175%;">Back</a>
   </div>
 
   <h1>Text ↔ Binary Converter</h1>
 
   <div class="grid">
+    <!-- TEXT -->
     <section>
       <div class="row">
         <strong>Text</strong>
         <span class="muted" id="textCount">0 chars</span>
-        <button type="button" id="copyText">Copy</button>
-        <button type="button" id="clearText">Clear</button>
+        <button id="copyText">Copy</button>
+        <button id="clearText">Clear</button>
       </div>
 
       <textarea id="textInput" placeholder="Type text here…"></textarea>
 
       <div class="row">
-        <button type="button" id="toBinary">Convert → Binary</button>
+        <label class="muted">
+          <input type="checkbox" id="addSpacing" checked>
+          add spacing
+        </label>
       </div>
     </section>
 
+    <!-- BINARY -->
     <section>
       <div class="row">
         <strong>Binary</strong>
         <span class="muted" id="binCount">0 bits</span>
-        <button type="button" id="copyBin">Copy</button>
-        <button type="button" id="clearBin">Clear</button>
+        <button id="copyBin">Copy</button>
+        <button id="clearBin">Clear</button>
       </div>
 
-      <textarea id="binInput" placeholder="Paste binary here (spaces/newlines allowed)…"></textarea>
+      <textarea id="binInput" placeholder="Paste or edit binary here…"></textarea>
 
       <div class="row">
-        <button type="button" id="toText">Convert → Text</button>
         <label class="muted">
-          <input type="checkbox" id="allow0b" />
+          <input type="checkbox" id="allow0b">
           allow 0b prefix
         </label>
       </div>
@@ -151,28 +150,30 @@
   <div id="status"></div>
 
   <script>
-    const $ = (id) => document.getElementById(id);
+    const $ = id => document.getElementById(id);
 
-    const textInput = $("textInput");
-    const binInput  = $("binInput");
-    const statusEl  = $("status");
-    const textCount = $("textCount");
-    const binCount  = $("binCount");
-    const allow0b   = $("allow0b");
+    const textInput  = $("textInput");
+    const binInput   = $("binInput");
+    const textCount  = $("textCount");
+    const binCount   = $("binCount");
+    const statusEl   = $("status");
+    const addSpacing = $("addSpacing");
+    const allow0b    = $("allow0b");
 
-    function setStatus(msg) {
-      statusEl.textContent = msg || "";
-    }
+    let activeSide = null; // prevents feedback loop
 
     function updateCounts() {
       textCount.textContent = `${textInput.value.length} chars`;
-      const bits = (binInput.value.match(/[01]/g) || []).length;
-      binCount.textContent = `${bits} bits`;
+      binCount.textContent =
+        `${(binInput.value.match(/[01]/g) || []).length} bits`;
     }
 
     function textToBinary(str) {
       const bytes = new TextEncoder().encode(str);
-      return Array.from(bytes, b => b.toString(2).padStart(8, "0")).join(" ");
+      const groups = [...bytes].map(b =>
+        b.toString(2).padStart(8, "0")
+      );
+      return addSpacing.checked ? groups.join(" ") : groups.join("");
     }
 
     function binaryToText(bin) {
@@ -181,66 +182,52 @@
 
       if (allow0b.checked) cleaned = cleaned.replace(/\b0b/g, "");
 
-      const invalid = cleaned.match(/[^01\s]/);
-      if (invalid) throw new Error(`Invalid character: "${invalid[0]}"`);
+      if (/[^01\s]/.test(cleaned))
+        throw new Error("Invalid binary input");
 
       let groups = cleaned.split(/\s+/).filter(Boolean);
 
-      // If they pasted one long stream, chunk into 8s
       if (groups.length === 1 && groups[0].length % 8 === 0) {
-        const stream = groups[0];
-        groups = [];
-        for (let i = 0; i < stream.length; i += 8) groups.push(stream.slice(i, i + 8));
-      }
-
-      for (const g of groups) {
-        if (g.length !== 8) throw new Error(`Binary group "${g}" is not 8 bits`);
-        if (!/^[01]{8}$/.test(g)) throw new Error(`Invalid group "${g}"`);
+        groups = groups[0].match(/.{8}/g);
       }
 
       const bytes = new Uint8Array(groups.map(g => parseInt(g, 2)));
       return new TextDecoder().decode(bytes);
     }
 
-    async function copyFrom(el) {
-      const val = el.value;
-      try {
-        await navigator.clipboard.writeText(val);
-        setStatus("Copied to clipboard");
-      } catch {
-        el.select();
-        document.execCommand("copy");
-        setStatus("Copied (fallback)");
-      }
-    }
-
-    $("toBinary").addEventListener("click", () => {
+    textInput.addEventListener("input", () => {
+      if (activeSide === "binary") return;
+      activeSide = "text";
       binInput.value = textToBinary(textInput.value);
       updateCounts();
-      setStatus("Converted text → binary");
+      statusEl.textContent = "Live: text → binary";
+      activeSide = null;
     });
 
-    $("toText").addEventListener("click", () => {
+    binInput.addEventListener("input", () => {
+      if (activeSide === "text") return;
+      activeSide = "binary";
       try {
         textInput.value = binaryToText(binInput.value);
-        updateCounts();
-        setStatus("Converted binary → text");
+        statusEl.textContent = "Live: binary → text";
       } catch (e) {
-        setStatus(e.message);
+        statusEl.textContent = e.message;
       }
+      updateCounts();
+      activeSide = null;
     });
 
-    $("copyText").addEventListener("click", () => copyFrom(textInput));
-    $("copyBin").addEventListener("click", () => copyFrom(binInput));
+    addSpacing.addEventListener("change", () => {
+      binInput.value = textToBinary(textInput.value);
+      updateCounts();
+    });
 
-    $("clearText").addEventListener("click", () => { textInput.value = ""; updateCounts(); setStatus(""); });
-    $("clearBin").addEventListener("click", () => { binInput.value = ""; updateCounts(); setStatus(""); });
-
-    textInput.addEventListener("input", updateCounts);
-    binInput.addEventListener("input", updateCounts);
+    $("copyText").onclick  = () => navigator.clipboard.writeText(textInput.value);
+    $("copyBin").onclick   = () => navigator.clipboard.writeText(binInput.value);
+    $("clearText").onclick = () => { textInput.value = ""; binInput.value = ""; updateCounts(); };
+    $("clearBin").onclick  = () => { binInput.value = ""; textInput.value = ""; updateCounts(); };
 
     updateCounts();
-    setStatus("");
   </script>
 </body>
 </html>
