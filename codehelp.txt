@@ -21,6 +21,11 @@ Use this code for making links:
 <a href="Link" style="text-decoration:none; font-size: 175%;">Link Text</a>
 
 
+Use this code to make text bigger:
+
+style="font-size: num%;"
+
+
 Use this code for automatic dark mode:
 
 <meta name="color-scheme" content="light dark" />
