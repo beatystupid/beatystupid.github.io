@@ -1,43 +1,118 @@
 <!doctype html>
-
-
-<head><link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet">
-<style>body {
-  font-family: 'Comic Relief', sans-serif;
-}
-</style></head>
-<meta name="color-scheme" content="light dark" />
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <meta name="color-scheme" content="light dark" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet">
+
   <title>Text ↔ Binary Converter</title>
+
   <style>
-    body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height: 1.35; }
-    h1 { margin: 0 0 12px; }
-    .grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
-    @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
-    textarea { width: 100%; min-height: 220px; padding: 10px; font: 14px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    button { padding: 8px 12px; cursor: pointer; }
-    .muted { opacity: 0.75; font-size: 13px; }
-    .pill { padding: 2px 8px; border: 1px solid #9993; border-radius: 999px; font-size: 12px; }
-    .ok { color: #0a7; }
-    .bad { color: #c33; }
+    * { box-sizing: border-box; } /* IMPORTANT: prevents textarea overflow */
+
+    body {
+      font-family: 'Comic Relief', sans-serif;
+      margin: 24px;
+      line-height: 1.35;
+    }
+
+    h1 { margin: 12px 0 16px; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    section {
+      min-width: 0;                 /* IMPORTANT: allows children to shrink in grid */
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid color-mix(in oklab, CanvasText 18%, Canvas 82%);
+      background: Canvas;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .muted { opacity: 0.7; font-size: 13px; }
+
+    textarea {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-height: 220px;
+      padding: 12px;
+      font: 14px/1.4 ui-monospace, SFMono-Regular, Consolas, monospace;
+      border-radius: 10px;
+      border: 1px solid color-mix(in oklab, CanvasText 22%, Canvas 78%);
+      background: Canvas;
+      color: CanvasText;
+      resize: vertical;
+      overflow-wrap: anywhere;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: color-mix(in oklab, CanvasText 45%, Canvas 55%);
+    }
+
+    button {
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid color-mix(in oklab, CanvasText 22%, Canvas 78%);
+      background: color-mix(in oklab, CanvasText 8%, Canvas 92%);
+      color: CanvasText;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: color-mix(in oklab, CanvasText 12%, Canvas 88%);
+    }
+
+    button:active {
+      background: color-mix(in oklab, CanvasText 16%, Canvas 84%);
+    }
+
+    #status {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-top: 10px;
+      min-height: 1.2em;
+    }
   </style>
 </head>
+
 <body>
-  <a href="https://beatystupid.github.io/" style="text-decoration:none; font-size: 175%;">Back</a><br>
-  <h1>Text ↔ Binary Converter</h1>
-  <div class="row muted">
-    <span class="pill">Binary format: 8-bit groups</span>
-    <span class="pill">Separator: spaces</span>
-    <span id="status" class="pill"></span>
+  <div class="topbar">
+    <a href="https://beatystupid.github.io" style="text-decoration:none; font-size: 175%;">Back</a>
   </div>
 
-  <div class="grid" style="margin-top:14px;">
+  <h1>Text ↔ Binary Converter</h1>
+
+  <div class="grid">
     <section>
       <div class="row">
         <strong>Text</strong>
@@ -45,7 +120,9 @@
         <button type="button" id="copyText">Copy</button>
         <button type="button" id="clearText">Clear</button>
       </div>
+
       <textarea id="textInput" placeholder="Type text here…"></textarea>
+
       <div class="row">
         <button type="button" id="toBinary">Convert → Binary</button>
       </div>
@@ -58,7 +135,9 @@
         <button type="button" id="copyBin">Copy</button>
         <button type="button" id="clearBin">Clear</button>
       </div>
+
       <textarea id="binInput" placeholder="Paste binary here (spaces/newlines allowed)…"></textarea>
+
       <div class="row">
         <button type="button" id="toText">Convert → Text</button>
         <label class="muted">
@@ -68,6 +147,8 @@
       </div>
     </section>
   </div>
+
+  <div id="status"></div>
 
   <script>
     const $ = (id) => document.getElementById(id);
@@ -79,9 +160,8 @@
     const binCount  = $("binCount");
     const allow0b   = $("allow0b");
 
-    function setStatus(msg, kind = "") {
+    function setStatus(msg) {
       statusEl.textContent = msg || "";
-      statusEl.className = "pill " + (kind === "ok" ? "ok" : kind === "bad" ? "bad" : "");
     }
 
     function updateCounts() {
@@ -90,33 +170,27 @@
       binCount.textContent = `${bits} bits`;
     }
 
-    // Encode text to bytes (UTF-8), then bytes to 8-bit binary.
     function textToBinary(str) {
       const bytes = new TextEncoder().encode(str);
       return Array.from(bytes, b => b.toString(2).padStart(8, "0")).join(" ");
     }
 
-    // Accept spaces/newlines; optionally accept 0b prefix; require 8-bit groups.
     function binaryToText(bin) {
       let cleaned = bin.trim();
-
       if (!cleaned) return "";
 
-      // Optional: allow "0b01010101"
       if (allow0b.checked) cleaned = cleaned.replace(/\b0b/g, "");
 
-      // Keep only 0/1 and separators (space/newline/tab)
-      // But first validate there aren't other characters.
       const invalid = cleaned.match(/[^01\s]/);
       if (invalid) throw new Error(`Invalid character: "${invalid[0]}"`);
 
-      const groups = cleaned.split(/\s+/).filter(Boolean);
+      let groups = cleaned.split(/\s+/).filter(Boolean);
+
+      // If they pasted one long stream, chunk into 8s
       if (groups.length === 1 && groups[0].length % 8 === 0) {
-        // If they pasted one long stream like 0101..., chunk it into 8s.
         const stream = groups[0];
-        const chunked = [];
-        for (let i = 0; i < stream.length; i += 8) chunked.push(stream.slice(i, i + 8));
-        groups.splice(0, 1, ...chunked);
+        groups = [];
+        for (let i = 0; i < stream.length; i += 8) groups.push(stream.slice(i, i + 8));
       }
 
       for (const g of groups) {
@@ -129,30 +203,30 @@
     }
 
     async function copyFrom(el) {
+      const val = el.value;
       try {
-        await navigator.clipboard.writeText(el.value);
-        setStatus("Copied to clipboard", "ok");
+        await navigator.clipboard.writeText(val);
+        setStatus("Copied to clipboard");
       } catch {
-        // Fallback
         el.select();
         document.execCommand("copy");
-        setStatus("Copied (fallback)", "ok");
+        setStatus("Copied (fallback)");
       }
     }
 
     $("toBinary").addEventListener("click", () => {
       binInput.value = textToBinary(textInput.value);
       updateCounts();
-      setStatus("Converted text → binary", "ok");
+      setStatus("Converted text → binary");
     });
 
     $("toText").addEventListener("click", () => {
       try {
         textInput.value = binaryToText(binInput.value);
         updateCounts();
-        setStatus("Converted binary → text", "ok");
+        setStatus("Converted binary → text");
       } catch (e) {
-        setStatus(e.message, "bad");
+        setStatus(e.message);
       }
     });
 
@@ -166,7 +240,7 @@
     binInput.addEventListener("input", updateCounts);
 
     updateCounts();
-    setStatus("Ready", "ok");
+    setStatus("");
   </script>
 </body>
 </html>
