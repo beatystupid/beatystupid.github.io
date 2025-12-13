@@ -1,0 +1,171 @@
+<!doctype html>
+
+
+<head><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet">
+<style>body {
+  font-family: 'Comic Relief', sans-serif;
+}
+</style></head>
+<meta name="color-scheme" content="light dark" />
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Text ↔ Binary Converter</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height: 1.35; }
+    h1 { margin: 0 0 12px; }
+    .grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
+    @media (min-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+    textarea { width: 100%; min-height: 220px; padding: 10px; font: 14px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    button { padding: 8px 12px; cursor: pointer; }
+    .muted { opacity: 0.75; font-size: 13px; }
+    .pill { padding: 2px 8px; border: 1px solid #9993; border-radius: 999px; font-size: 12px; }
+    .ok { color: #0a7; }
+    .bad { color: #c33; }
+  </style>
+</head>
+<body>
+  <h1>Text ↔ Binary Converter</h1>
+  <div class="row muted">
+    <span class="pill">Binary format: 8-bit groups</span>
+    <span class="pill">Separator: spaces</span>
+    <span id="status" class="pill"></span>
+  </div>
+
+  <div class="grid" style="margin-top:14px;">
+    <section>
+      <div class="row">
+        <strong>Text</strong>
+        <span class="muted" id="textCount">0 chars</span>
+        <button type="button" id="copyText">Copy</button>
+        <button type="button" id="clearText">Clear</button>
+      </div>
+      <textarea id="textInput" placeholder="Type text here…"></textarea>
+      <div class="row">
+        <button type="button" id="toBinary">Convert → Binary</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="row">
+        <strong>Binary</strong>
+        <span class="muted" id="binCount">0 bits</span>
+        <button type="button" id="copyBin">Copy</button>
+        <button type="button" id="clearBin">Clear</button>
+      </div>
+      <textarea id="binInput" placeholder="Paste binary here (spaces/newlines allowed)…"></textarea>
+      <div class="row">
+        <button type="button" id="toText">Convert → Text</button>
+        <label class="muted">
+          <input type="checkbox" id="allow0b" />
+          allow 0b prefix
+        </label>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const textInput = $("textInput");
+    const binInput  = $("binInput");
+    const statusEl  = $("status");
+    const textCount = $("textCount");
+    const binCount  = $("binCount");
+    const allow0b   = $("allow0b");
+
+    function setStatus(msg, kind = "") {
+      statusEl.textContent = msg || "";
+      statusEl.className = "pill " + (kind === "ok" ? "ok" : kind === "bad" ? "bad" : "");
+    }
+
+    function updateCounts() {
+      textCount.textContent = `${textInput.value.length} chars`;
+      const bits = (binInput.value.match(/[01]/g) || []).length;
+      binCount.textContent = `${bits} bits`;
+    }
+
+    // Encode text to bytes (UTF-8), then bytes to 8-bit binary.
+    function textToBinary(str) {
+      const bytes = new TextEncoder().encode(str);
+      return Array.from(bytes, b => b.toString(2).padStart(8, "0")).join(" ");
+    }
+
+    // Accept spaces/newlines; optionally accept 0b prefix; require 8-bit groups.
+    function binaryToText(bin) {
+      let cleaned = bin.trim();
+
+      if (!cleaned) return "";
+
+      // Optional: allow "0b01010101"
+      if (allow0b.checked) cleaned = cleaned.replace(/\b0b/g, "");
+
+      // Keep only 0/1 and separators (space/newline/tab)
+      // But first validate there aren't other characters.
+      const invalid = cleaned.match(/[^01\s]/);
+      if (invalid) throw new Error(`Invalid character: "${invalid[0]}"`);
+
+      const groups = cleaned.split(/\s+/).filter(Boolean);
+      if (groups.length === 1 && groups[0].length % 8 === 0) {
+        // If they pasted one long stream like 0101..., chunk it into 8s.
+        const stream = groups[0];
+        const chunked = [];
+        for (let i = 0; i < stream.length; i += 8) chunked.push(stream.slice(i, i + 8));
+        groups.splice(0, 1, ...chunked);
+      }
+
+      for (const g of groups) {
+        if (g.length !== 8) throw new Error(`Binary group "${g}" is not 8 bits`);
+        if (!/^[01]{8}$/.test(g)) throw new Error(`Invalid group "${g}"`);
+      }
+
+      const bytes = new Uint8Array(groups.map(g => parseInt(g, 2)));
+      return new TextDecoder().decode(bytes);
+    }
+
+    async function copyFrom(el) {
+      try {
+        await navigator.clipboard.writeText(el.value);
+        setStatus("Copied to clipboard", "ok");
+      } catch {
+        // Fallback
+        el.select();
+        document.execCommand("copy");
+        setStatus("Copied (fallback)", "ok");
+      }
+    }
+
+    $("toBinary").addEventListener("click", () => {
+      binInput.value = textToBinary(textInput.value);
+      updateCounts();
+      setStatus("Converted text → binary", "ok");
+    });
+
+    $("toText").addEventListener("click", () => {
+      try {
+        textInput.value = binaryToText(binInput.value);
+        updateCounts();
+        setStatus("Converted binary → text", "ok");
+      } catch (e) {
+        setStatus(e.message, "bad");
+      }
+    });
+
+    $("copyText").addEventListener("click", () => copyFrom(textInput));
+    $("copyBin").addEventListener("click", () => copyFrom(binInput));
+
+    $("clearText").addEventListener("click", () => { textInput.value = ""; updateCounts(); setStatus(""); });
+    $("clearBin").addEventListener("click", () => { binInput.value = ""; updateCounts(); setStatus(""); });
+
+    textInput.addEventListener("input", updateCounts);
+    binInput.addEventListener("input", updateCounts);
+
+    updateCounts();
+    setStatus("Ready", "ok");
+  </script>
+</body>
+</html>
