@@ -18,3 +18,4 @@ Use this code for adding the font:
 
 Use this code for making links:
 
+<a href="Link">Link Text</a>
