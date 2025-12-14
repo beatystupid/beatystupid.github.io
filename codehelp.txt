@@ -35,3 +35,20 @@ style="font-size: num%;"
 Use this code for automatic dark mode:
 
 <meta name="color-scheme" content="light dark" />
+
+
+This adds an embed preview:
+
+<head>
+  <meta charset="utf-8">
+
+  <!-- Open Graph (link preview) -->
+  <meta property="og:title" content="My Website Title">
+  <meta property="og:description" content="A short description of what this page is about.">
+  <meta property="og:image" content="https://yourusername.github.io/path/preview.png">
+  <meta property="og:url" content="https://yourusername.github.io/path/page.html">
+  <meta property="og:type" content="website">
+
+  <!-- Optional but recommended -->
+  <meta name="theme-color" content="#ff0000">
+</head>
