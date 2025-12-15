@@ -52,3 +52,26 @@ This adds an embed preview:
   <!-- Optional but recommended -->
   <meta name="theme-color" content="#ff0000">
 </head>
+
+
+This adds link Icons
+
+document.querySelectorAll("a").forEach(link => {
+        if (link.querySelector("img")) return;
+        let domain;
+        try {
+          domain = new URL(link.href).origin;
+        } catch {
+          return;
+        }
+        const icon = document.createElement("img");
+        icon.src = `https://www.google.com/s2/favicons?sz=32&domain_url=${domain}`;
+        icon.alt = "favicon";
+        icon.style.width = "1em"; //width of icon
+        icon.style.height = "1em"; //height of icon
+        icon.style.verticalAlign = "middle"; //where it aligns with text
+        icon.style.marginTop = "-.4em"; //offset from the top of text
+        icon.style.marginRight = "6px"; //offset from left edge of text
+        icon.style.borderRadius = "25%"; //corner rounding
+        link.prepend(icon);
+});
