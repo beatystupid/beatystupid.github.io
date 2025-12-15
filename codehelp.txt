@@ -75,3 +75,36 @@ document.querySelectorAll("a").forEach(link => {
         icon.style.borderRadius = "25%"; //corner rounding
         link.prepend(icon);
 });
+
+or, for a section,
+
+<div id="link-section">
+  <a href="link">link</a>
+</div>
+
+and also add this above:
+
+<script>
+  document.querySelectorAll("#link-section a").forEach(link => {
+    if (link.querySelector("img")) return;
+
+    let domain;
+    try {
+      domain = new URL(link.href).origin;
+    } catch {
+      return;
+    }
+
+    const icon = document.createElement("img");
+    icon.src = `https://www.google.com/s2/favicons?sz=32&domain_url=${domain}`;
+    icon.alt = "favicon";
+    icon.style.width = "1em";          // width of icon
+    icon.style.height = "1em";         // height of icon
+    icon.style.verticalAlign = "middle";
+    icon.style.marginTop = "-.4em";
+    icon.style.marginRight = "6px";
+    icon.style.borderRadius = "25%";
+
+    link.prepend(icon);
+  });
+</script>
