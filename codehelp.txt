@@ -114,3 +114,8 @@ Add this inside <head> for a link title and icon, and make sure the image is 16x
 
 <title>My Website</title>
 <link rel="icon" type="image/png" href="favicon.png">
+
+
+this link can resize images for icons:
+
+https://ezgif.com/resize
