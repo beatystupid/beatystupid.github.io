@@ -82,7 +82,7 @@ or, for a section,
   <a href="link">link</a>
 </div>
 
-and also add this above:
+and also add this below everything:
 
 <script>
   document.querySelectorAll("#link-section a").forEach(link => {
