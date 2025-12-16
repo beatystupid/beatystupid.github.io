@@ -110,7 +110,7 @@ and also add this below everything:
 </script>
 
 
-Add this inside <head> for a link title and icon:
+Add this inside <head> for a link title and icon, and make sure the image is 16x16 or 32x32:
 
 <title>My Website</title>
 <link rel="icon" type="image/png" href="favicon.png">
