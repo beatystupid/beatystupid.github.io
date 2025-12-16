@@ -26,7 +26,6 @@
     <meta name="color-scheme" content="light dark" />
 
     <a href="https://beatystupid.github.io" style="text-decoration:none; font-size: 175%;">Back</a>
-   
     <div style="text-align: center;">
         <h1>Game Hub</h1><br>
         <a href="https://beatystupid.github.io/gamehub/gamehub.html" style="text-decoration:none; font-size: 150%; color: #D81525;">Games</a>
@@ -34,7 +33,7 @@
          <a href="https://beatystupid.github.io/gamehub/recommend.html" style="text-decoration:none; font-size: 150%; color: #D81525;">Recommend</a>
         <br><br>
      
-          <div>
+          <div style="text-align: center;" id="link-section">
             
             <a href="https://beatystupid.github.io/gamehub/dino.html" style="text-decoration:none; font-size: 150%;">Dino Game</a>
             <br>
@@ -96,7 +95,37 @@
           
         
       <br>
+      </div>
+      <div style="text-align: center;">
       <p> That's it! (so far...)</p><br>
           </div>
+
+    </div>
   </body>
+
+  <script>
+  document.querySelectorAll("#link-section a").forEach(link => {
+    if (link.querySelector("img")) return;
+
+    let domain;
+    try {
+      domain = new URL(link.href).origin;
+    } catch {
+      return;
+    }
+
+    const icon = document.createElement("img");
+    icon.src = `https://www.google.com/s2/favicons?sz=32&domain_url=${domain}`;
+    icon.alt = "favicon";
+    icon.style.width = "1em";          // width of icon
+    icon.style.height = "1em";         // height of icon
+    icon.style.verticalAlign = "middle";
+    icon.style.marginTop = "-.4em";
+    icon.style.marginRight = "6px";
+    icon.style.borderRadius = "25%";
+
+    link.prepend(icon);
+  });
+</script>
+  
 </html>
