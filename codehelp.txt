@@ -112,6 +112,5 @@ and also add this below everything:
 
 Add this inside <head> for a link title and icon:
 
-<meta charset="UTF-8">
-  <title>My Website</title>
+<title>My Website</title>
 <link rel="icon" type="image/png" href="favicon.png">
