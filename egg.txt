@@ -1,0 +1,19 @@
+I made a discord bot!
+This bot will react the egg emoji on EVRERY message in your servers! It gets administrator so yes, EVERY channel, even mod only ones.
+This bot only is active if i am running the bot python file on my pc though ¬_¬
+Anyway, to get it, make sure you have Administrator in the server and permission cuz it is very annoying! ;] Then use the link below and select your server in the dialogue! Enjoy egging!
+
+Link:
+
+https://discord.com/oauth2/authorize?client_id=1465097063153795300&permissions=8&integration_type=0&scope=bot
+
+My Active Hours (Usually)
+
+Monday- Thursday
+<t:1769389200:t> - <t:1769401800:t> 
+Friday
+<t:1769389200:t> - <t:1769403600:t> 
+Saturday and Sunday
+<t:1769398200:t> - <t:1769403600:t> 
+
+Note that this used Discord's @time feature and that means that this message can't display them. If you wish to see these times, please take one of the <t:#:t> brackets and paste them into discord. Also, these times are accurate for everyone! (If your device's time zone is correct) Also note that these may be not true if im doing something, and the bot may not be online, even if I am. If you do see me online and would like to have the bot be enabled, please message me. I have open DMs.
