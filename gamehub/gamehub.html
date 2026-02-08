@@ -31,6 +31,7 @@
   <meta name="theme-color" content="#ff0000">
 
     <title>Beaty Gamehub</title>
+    
 <link rel="icon" type="image/png" href="https://beatystupid.github.io/images/beatyico.png">
   </head>
   <!------------>
@@ -40,7 +41,9 @@
 
     <a href="https://beatystupid.github.io" style="text-decoration:none; font-size: 175%;">Back</a>
     <div style="text-align: center;">
-        <h1>Game Hub</h1><br>
+        <h1>Game Hub</h1>
+      <p id="splashtext">placeholder text</p>
+      <br>
         <a href="https://beatystupid.github.io/gamehub/gamehub.html" style="font-size: 150%; color: #D81525;">Games</a>
          &nbsp; &nbsp;
          <a href="https://beatystupid.github.io/gamehub/recommend.html" style="text-decoration:none; font-size: 150%; color: #D81525;">Recommend</a>
@@ -179,5 +182,13 @@
     link.prepend(icon);
   });
 </script>
-  
+  <script>
+    const splashtext = [
+      "test",
+      "test2"
+      ];
+    document.getElementById("splashtext").textContent =
+				splashtext[Math.floor(Math.random() * splashtext.length)];
+  </script>
+  <!-- fortnite battle pass -->
 </html>
