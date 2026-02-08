@@ -48,9 +48,13 @@
          &nbsp; &nbsp;
          <a href="https://beatystupid.github.io/gamehub/recommend.html" style="text-decoration:none; font-size: 150%; color: #D81525;">Recommend</a>
         <br><br>
+      
      
-          <div style="text-align: center;" id="link-section" class="games-box">
-            
+          <div id="link-section;" class="games-box">
+			  
+            <div id="games-section">
+              <p id="gamecount" class="mintext" style="margin-top: -1px;"></p>
+					<p id="games" style="line-height: 1.5; margin-top: -10px">
             <a href="https://beatystupid.github.io/gamehub/dino.html" style="text-decoration:none; font-size: 150%;">Dino Game</a>
             <br>
             
@@ -115,13 +119,15 @@
             <a href="https://monkeytype.com/" style="text-decoration: none; font-size: 150%;">Monkey Type</a>
             <br>
             <a href="https://pongonpolygon.github.io/glitchhub_games/PortalTheFlashVersion/PortalTheFlashVersion" style="text-decoration: none; font-size: 150%;">Portal: The Flash Version</a>
+              
             <br>
-            
-          
+              
+		  </div>
+		  </div>
           
         
       <br>
-      </div>
+      
       <p> That's it! (so far...)</p><br>
       
       
@@ -191,4 +197,11 @@
 				splashtext[Math.floor(Math.random() * splashtext.length)];
   </script>
   <!-- fortnite battle pass -->
+
+	<!-- count stolen from poly -->
+	<script>
+			const parent = document.getElementById("games");
+			const count = parent.children.length / 2;
+			document.getElementById("gamecount").textContent = count + " TOTAL GAMES";
+		</script>
 </html>
