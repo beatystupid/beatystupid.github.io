@@ -188,6 +188,12 @@
     link.prepend(icon);
   });
 </script>
+		<!-- count stolen from poly -->
+	<script>
+			const parent = document.getElementById("games");
+			const count = parent.children.length / 2;
+			document.getElementById("gamecount").textContent = count + " TOTAL GAMES";
+		</script>
   <script>
     const splash = [
       "Fun Random Games to Play When You are Bored",
@@ -199,11 +205,4 @@
   </script>
   
   <!-- fortnite battle pass -->
-
-	<!-- count stolen from poly -->
-	<script>
-			const parent = document.getElementById("games");
-			const count = parent.children.length / 2;
-			document.getElementById("gamecount").textContent = count + " TOTAL GAMES";
-		</script>
 </html>
