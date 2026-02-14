@@ -18,6 +18,21 @@
   max-width: 450px;     /* optional max width */
   margin: 40px auto;    /* center on page */
 }
+
+/* search bar stuff */
+
+.search {
+    font-family: "Comic Relief";
+    color: #ffffff;
+    background-color: #000024;
+    height: 25px;
+    border: solid #676777;
+    border-radius: 0px;
+}
+
+/* end of search stuff */
+
+		
       </style>
     <meta charset="utf-8">
 
@@ -37,6 +52,42 @@
   </head>
   <!------------>
 
+<!-- JavaScript for the search bar -->
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("search");
+    if (!searchInput) return;
+
+    const containers = ["games", "vids"]; // ids from the page
+
+    searchInput.addEventListener("input", () => {
+        const filter = searchInput.value.toLowerCase();
+
+        containers.forEach(id => {
+            const area = document.getElementById(id);
+            if (!area) return;
+
+            const links = area.querySelectorAll("a");
+
+            links.forEach(link => {
+                const match = link.textContent.toLowerCase().includes(filter);
+                link.style.display = match ? "" : "none";
+
+                // remove ugly spacing
+                const br = link.nextElementSibling;
+                if (br && br.tagName === "BR") {
+                    br.style.display = match ? "" : "none";
+                }
+            });
+        });
+    });
+});
+</script>
+
+
+	<!-- end of JavaScript stuff for search -->
+
   <body>
     <meta name="color-scheme" content="light dark" />
 
@@ -51,7 +102,8 @@
          <a href="https://beatystupid.github.io/gamehub/recommend.html" style="text-decoration:none; font-size: 150%; color: #D81525;">Recommend</a>
         <br><br>
       
-     
+     <input type="text" id="search" placeholder="Search..." class="search">
+
           <div id="link-section" class="games-box">
 			  
             <div id="games-section">
