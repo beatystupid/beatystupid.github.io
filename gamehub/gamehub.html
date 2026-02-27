@@ -32,6 +32,14 @@
 
 /* end of search stuff */
 
+  /* Center container */
+  .script-container {
+    display: flex;           /* use flexbox */
+    justify-content: center; /* horizontal center */
+    align-items: center;     /* vertical center (if you want full viewport) */
+    height: 100vh;           /* full viewport height */
+  }
+
 		
       </style>
     <meta charset="utf-8">
@@ -208,11 +216,10 @@ document.addEventListener("DOMContentLoaded", () => {
       -->
       
       
-      <p>____________________</p>
-      <br>
-
+     
+	<div id="script-container">
 		<script src="https://cdn.jsdelivr.net/gh/PongonPolygon/glitchhub_games@main/iseeyou/eyes.js?size=2&gap=50"></script>
-		
+	</div>
           </div>
 
     </div>
