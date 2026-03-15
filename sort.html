@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Odd-Even Sort Visualizer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Comic+Relief&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+font-family:"Comic Relief", sans-serif;
+}
+
+body{
+background:#0b0f14;
+color:white;
+text-align:center;
+}
+
+canvas{
+background:#0b0f14;
+display:block;
+margin:auto;
+}
+
+.controls{
+margin:15px;
+}
+
+a{
+color:#00e5ff;
+text-decoration:none;
+}
+
+a:hover{
+text-decoration:underline;
+}
+
+.footer{
+margin-top:25px;
+opacity:0.8;
+font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+<a style="font-size: 150% href="https://beatystupid.github.io">Back</a>
+<h1>Odd-Even Sort</h1>
+
+<div class="controls">
+
+<button onclick="generate()">Generate</button>
+<button onclick="startSort()">Start</button>
+
+<br><br>
+
+Speed
+<input type="range" id="speed" min="1" max="200" value="60">
+
+Bars
+<input type="range" id="count" min="10" max="150" value="60">
+
+</div>
+
+<canvas id="canvas" width="900" height="350"></canvas>
+
+<div class="footer">
+Inspiration:
+<a href="https://www.youtube.com/shorts/5u25qC13N2g" target="_blank">
+https://www.youtube.com/shorts/5u25qC13N2g
+</a>
+</div>
+
+<script>
+
+const canvas=document.getElementById("canvas")
+const ctx=canvas.getContext("2d")
+
+let arr=[]
+let sorting=false
+
+const speedSlider=document.getElementById("speed")
+const countSlider=document.getElementById("count")
+
+let audio=new (window.AudioContext||window.webkitAudioContext)()
+
+function tone(value){
+
+let osc=audio.createOscillator()
+let gain=audio.createGain()
+
+osc.type="triangle"
+osc.frequency.value=200+value*800
+
+gain.gain.value=0.08
+
+osc.connect(gain)
+gain.connect(audio.destination)
+
+osc.start()
+osc.stop(audio.currentTime+0.03)
+
+}
+
+function sleep(){
+return new Promise(r=>setTimeout(r,201-speedSlider.value))
+}
+
+function generate(){
+
+arr=[]
+
+for(let i=0;i<countSlider.value;i++){
+arr.push(Math.random())
+}
+
+draw()
+
+}
+
+function draw(a=-1,b=-1){
+
+ctx.clearRect(0,0,canvas.width,canvas.height)
+
+let w=canvas.width/arr.length
+
+for(let i=0;i<arr.length;i++){
+
+let h=arr[i]*canvas.height
+
+if(i===a||i===b) ctx.fillStyle="#00e5ff"
+else ctx.fillStyle="#cccccc"
+
+ctx.fillRect(i*w,canvas.height-h,w-1,h)
+
+}
+
+}
+
+async function startSort(){
+
+if(sorting) return
+sorting=true
+
+audio.resume()
+
+let sorted=false
+
+while(!sorted){
+
+sorted=true
+
+for(let i=1;i<arr.length-1;i+=2){
+
+draw(i,i+1)
+tone(arr[i])
+
+await sleep()
+
+if(arr[i]>arr[i+1]){
+
+[arr[i],arr[i+1]]=[arr[i+1],arr[i]]
+sorted=false
+
+}
+
+}
+
+for(let i=0;i<arr.length-1;i+=2){
+
+draw(i,i+1)
+tone(arr[i])
+
+await sleep()
+
+if(arr[i]>arr[i+1]){
+
+[arr[i],arr[i+1]]=[arr[i+1],arr[i]]
+sorted=false
+
+}
+
+}
+
+}
+
+draw()
+sorting=false
+
+}
+
+generate()
+
+</script>
+
+</body>
+</html>
