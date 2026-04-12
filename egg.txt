@@ -1,5 +1,5 @@
 I made a discord bot!
-This bot will react the egg emoji on EVRERY message in your servers! It gets administrator so yes, EVERY channel, even mod only ones.
+This bot will react the egg emoji on EVERY message in your servers! It gets administrator so yes, EVERY channel, even mod only ones.
 This bot only is active if i am running the bot python file on my pc though ¬_¬
 Anyway, to get it, make sure you have Administrator in the server and permission cuz it is very annoying! ;] Then use the link below and select your server in the dialogue! Enjoy egging!
 
